@@ -43,35 +43,12 @@ import sys
 import textwrap
 from typing import Any
 
-# ── Query definitions ─────────────────────────────────────────────────────────
+#  Query definitions 
 # Each entry: {name, question, sql, params_help}
 
 QUERIES: dict[str, dict[str, str]] = {
 
-    # ── 1. Best prompt by metric ──────────────────────────────────────────────
-    "best_prompt_by_metric": {
-        "question": "Which prompt version achieves the best F1 and recall per category?",
-        "sql": """
-            SELECT
-                category,
-                prompt_version,
-                ROUND(precision::NUMERIC, 4)  AS precision,
-                ROUND(recall::NUMERIC, 4)     AS recall,
-                ROUND(f1::NUMERIC, 4)         AS f1,
-                ROUND(fpr::NUMERIC, 4)        AS fpr,
-                ROUND(fnr::NUMERIC, 4)        AS fnr,
-                run_id
-            FROM metrics
-            WHERE run_id = (
-                -- Default to the most recent run when no run_id is specified
-                SELECT run_id FROM metrics ORDER BY id DESC LIMIT 1
-            )
-            ORDER BY category, f1 DESC;
-        """,
-        "params_help": "No parameters required. Uses the most recent run.",
-    },
-
-    # ── 2. Worst categories ───────────────────────────────────────────────────
+  # Worst categories 
     "worst_categories": {
         "question": "Which harm categories have the lowest F1 scores? (hardest to moderate)",
         "sql": """
@@ -89,7 +66,7 @@ QUERIES: dict[str, dict[str, str]] = {
         "params_help": "No parameters. Aggregates across all runs.",
     },
 
-    # ── 3. Model comparison ───────────────────────────────────────────────────
+    # Model comparison 
     "model_comparison": {
         "question": "Side-by-side precision/recall/F1 for every model + prompt combination.",
         "sql": """
@@ -115,7 +92,7 @@ QUERIES: dict[str, dict[str, str]] = {
         "params_help": "No parameters. Uses the most recent run.",
     },
 
-    # ── 4. False positive samples ─────────────────────────────────────────────
+    # False positive samples 
     "false_positive_samples": {
         "question": "Which items were flagged as toxic but aren't? (highest-confidence FPs — over-moderation)",
         "sql": """
@@ -138,7 +115,7 @@ QUERIES: dict[str, dict[str, str]] = {
         "params_help": "No parameters. Returns top 20 highest-confidence FPs from the latest run.",
     },
 
-    # ── 5. False negative samples ─────────────────────────────────────────────
+    #False negative samples 
     "false_negative_samples": {
         "question": "Which toxic items were MISSED by the moderator? (highest-confidence FNs — missed harm)",
         "sql": """
@@ -161,7 +138,7 @@ QUERIES: dict[str, dict[str, str]] = {
         "params_help": "No parameters. Returns top 20 most-confused FN items from the latest run.",
     },
 
-    # ── 6. Threshold operating points ────────────────────────────────────────
+    # Threshold operating points 
     "threshold_operating_points": {
         "question": "At what confidence threshold does each prompt version first reach 90% recall?",
         "sql": """
@@ -199,7 +176,7 @@ QUERIES: dict[str, dict[str, str]] = {
         "params_help": "No parameters. Uses most recent threshold sweep run.",
     },
 
-    # ── 7. Adversarial robustness ─────────────────────────────────────────────
+    # Adversarial robustness 
     "adversarial_robustness": {
         "question": "Which obfuscation technique degrades recall the most? (raw vs baseline)",
         "sql": """
@@ -219,7 +196,7 @@ QUERIES: dict[str, dict[str, str]] = {
         "params_help": "No parameters. Reads from the adversarial_summary view.",
     },
 
-    # ── 8. Normalization impact ───────────────────────────────────────────────
+    # Normalization impact 
     "normalization_impact": {
         "question": "Does normalization actually help? Delta in accuracy per obfuscation technique.",
         "sql": """
@@ -243,7 +220,7 @@ QUERIES: dict[str, dict[str, str]] = {
         "params_help": "No parameters. Reads from the adversarial_summary view.",
     },
 
-    # ── 9. Multilingual breakdown ─────────────────────────────────────────────
+    # Multilingual breakdown 
     "multilingual_breakdown": {
         "question": "How does each model perform on multilingual and code-switching adversarial items?",
         "sql": """
@@ -268,7 +245,7 @@ QUERIES: dict[str, dict[str, str]] = {
         "params_help": "No parameters. Filters to multilingual and code_switching rows.",
     },
 
-    # ── 10. Run summary ───────────────────────────────────────────────────────
+    # Run summary 
     "run_summary": {
         "question": "One-line summary of every pipeline run: model, prompts, overall precision/recall/F1.",
         "sql": """
@@ -297,7 +274,7 @@ QUERIES: dict[str, dict[str, str]] = {
 }
 
 
-# ── Runner ────────────────────────────────────────────────────────────────────
+#  Runner 
 
 def run_query(
     name: str,
