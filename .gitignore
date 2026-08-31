@@ -1,0 +1,59 @@
+# ── Real dataset files — NEVER commit these ───────────────────────────────────
+data/raw/
+data/processed/
+data/jigsaw-toxic-comment/
+data/davidson-hate-speech-and-offensive-language/
+
+# ── Secrets ───────────────────────────────────────────────────────────────────
+.env
+
+# ── HuggingFace model cache ───────────────────────────────────────────────────
+# Models are large (500MB–2GB) — download from HuggingFace Hub, don't commit
+.cache/
+
+# ── Large data files ──────────────────────────────────────────────────────────
+*.pkz
+*.pkl
+*.h5
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# ── Virtual environments ──────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+.pytest_cache/
+.hypothesis/
+htmlcov/
+.coverage
+coverage.xml
+
+# ── IDEs ──────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Generated outputs ─────────────────────────────────────────────────────────
+dashboards/*.png
+test_results.txt
+*.ipynb
+.ipynb_checkpoints/
+superset/

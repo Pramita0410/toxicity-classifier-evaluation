@@ -1,0 +1,22 @@
+﻿{
+  "jigsaw_1":  { "zero_shot": {"decision": "not_toxic", "confidence": 0.9}, "few_shot": {"decision": "not_toxic", "confidence": 0.9} },
+  "jigsaw_2":  { "zero_shot": {"decision": "not_toxic", "confidence": 0.9}, "few_shot": {"decision": "not_toxic", "confidence": 0.9} },
+  "jigsaw_3":  { "zero_shot": {"decision": "toxic",     "confidence": 0.9}, "few_shot": {"decision": "toxic",     "confidence": 0.9} },
+  "jigsaw_4":  { "zero_shot": {"decision": "toxic",     "confidence": 0.9}, "few_shot": {"decision": "toxic",     "confidence": 0.9} },
+  "jigsaw_5":  { "zero_shot": {"decision": "toxic",     "confidence": 0.9}, "few_shot": {"decision": "toxic",     "confidence": 0.9} },
+  "jigsaw_6":  { "zero_shot": {"decision": "not_toxic", "confidence": 0.9}, "few_shot": {"decision": "not_toxic", "confidence": 0.9} },
+  "jigsaw_7":  { "zero_shot": {"decision": "toxic",     "confidence": 0.9}, "few_shot": {"decision": "toxic",     "confidence": 0.9} },
+  "jigsaw_8":  { "zero_shot": {"decision": "toxic",     "confidence": 0.9}, "few_shot": {"decision": "toxic",     "confidence": 0.9} },
+  "jigsaw_9":  { "zero_shot": {"decision": "not_toxic", "confidence": 0.9}, "few_shot": {"decision": "not_toxic", "confidence": 0.9} },
+  "jigsaw_10": { "zero_shot": {"decision": "toxic",     "confidence": 0.9}, "few_shot": {"decision": "toxic",     "confidence": 0.9} },
+  "jigsaw_11": { "zero_shot": {"decision": "toxic",     "confidence": 0.9}, "few_shot": {"decision": "toxic",     "confidence": 0.9} },
+  "jigsaw_12": { "zero_shot": {"decision": "not_toxic", "confidence": 0.9}, "few_shot": {"decision": "not_toxic", "confidence": 0.9} },
+  "jigsaw_13": { "zero_shot": {"decision": "not_toxic", "confidence": 0.5}, "few_shot": {"decision": "not_toxic", "confidence": 0.5} },
+  "jigsaw_14": { "zero_shot": {"decision": "not_toxic", "confidence": 0.9}, "few_shot": {"decision": "not_toxic", "confidence": 0.9} },
+  "jigsaw_15": { "zero_shot": {"decision": "toxic",     "confidence": 0.9}, "few_shot": {"decision": "toxic",     "confidence": 0.9} },
+  "davidson_1": { "zero_shot": {"decision": "not_toxic", "confidence": 0.9}, "few_shot": {"decision": "not_toxic", "confidence": 0.9} },
+  "davidson_2": { "zero_shot": {"decision": "toxic",     "confidence": 0.9}, "few_shot": {"decision": "toxic",     "confidence": 0.9} },
+  "davidson_3": { "zero_shot": {"decision": "not_toxic", "confidence": 0.9}, "few_shot": {"decision": "not_toxic", "confidence": 0.9} },
+  "davidson_4": { "zero_shot": {"decision": "not_toxic", "confidence": 0.9}, "few_shot": {"decision": "not_toxic", "confidence": 0.9} },
+  "davidson_5": { "zero_shot": {"decision": "toxic",     "confidence": 0.7}, "few_shot": {"decision": "not_toxic", "confidence": 0.6} }
+}

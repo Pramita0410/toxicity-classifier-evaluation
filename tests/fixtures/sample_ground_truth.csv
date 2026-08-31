@@ -1,0 +1,21 @@
+item_id,text,toxic,severe_toxic,obscene,threat,insult,identity_hate,dataset_source
+jigsaw_1,Sample text 1 about the weather.,0,0,0,0,0,0,jigsaw
+jigsaw_2,Sample text 2 describing a sunny afternoon.,0,0,0,0,0,0,jigsaw
+jigsaw_3,Sample text 3 that is considered toxic.,1,0,0,0,0,0,jigsaw
+jigsaw_4,Sample text 4 with multiple harmful labels.,1,1,1,0,1,0,jigsaw
+jigsaw_5,Sample text 5 that is a threat.,1,0,0,1,0,0,jigsaw
+jigsaw_6,Sample text 6 about cooking recipes.,0,0,0,0,0,0,jigsaw
+jigsaw_7,Sample text 7 with identity-based content.,1,0,0,0,0,1,jigsaw
+jigsaw_8,Sample text 8 that is obscene only.,1,0,1,0,0,0,jigsaw
+jigsaw_9,Sample text 9 about sports news.,0,0,0,0,0,0,jigsaw
+jigsaw_10,Sample text 10 that is an insult.,1,0,0,0,1,0,jigsaw
+jigsaw_11,Sample text 11 with all labels set.,1,1,1,1,1,1,jigsaw
+jigsaw_12,Sample text 12 about technology trends.,0,0,0,0,0,0,jigsaw
+jigsaw_13,Sample text 13 with a null toxic label.,,0,0,0,0,0,jigsaw
+jigsaw_14,Sample text 14 about travel destinations.,0,0,0,0,0,0,jigsaw
+jigsaw_15,Sample text 15 that is severely toxic.,1,1,0,0,0,0,jigsaw
+davidson_1,Sample tweet 1 about daily life.,0,,,,,,davidson
+davidson_2,Sample tweet 2 classified as harmful.,1,,,,,,davidson
+davidson_3,Sample tweet 3 about local events.,0,,,,,,davidson
+davidson_4,Sample tweet 4 about music.,0,,,,,,davidson
+davidson_5,Sample tweet 5 classified as offensive.,1,,,,,,davidson

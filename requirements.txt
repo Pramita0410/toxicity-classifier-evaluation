@@ -1,0 +1,40 @@
+# AI Safety Evaluation Platform — Python dependencies
+# Install with: pip install -r requirements.txt
+#
+# For torch on Windows CPU (no CUDA):
+#   pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
+
+# ── Data handling ─────────────────────────────────────────────────────────────
+pandas==2.2.2
+numpy==1.26.4
+
+# ── Database ──────────────────────────────────────────────────────────────────
+sqlalchemy==2.0.30
+psycopg2-binary==2.9.9
+
+# ── HuggingFace / local models ────────────────────────────────────────────────
+transformers==5.16.1
+# torch: install separately with CPU wheel (see note above)
+# torch==2.5.1
+sentencepiece==0.2.0
+safetensors==0.8.0
+detoxify==0.5.2
+huggingface_hub==1.29.0
+tokenizers==0.23.1
+
+# ── LLM API clients (optional — only needed for OpenAI/Gemini runs) ───────────
+openai==1.30.5
+# google-generativeai==0.7.2  # uncomment if using Gemini
+
+# ── Config / environment ──────────────────────────────────────────────────────
+python-dotenv==1.0.1
+
+# ── Visualization ─────────────────────────────────────────────────────────────
+matplotlib>=3.8.0
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+pytest==8.2.2
+hypothesis==6.103.2
+
+# ── Linting ───────────────────────────────────────────────────────────────────
+ruff==0.4.8
