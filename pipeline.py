@@ -37,7 +37,7 @@ from typing import Any
 import pandas as pd
 import sqlalchemy
 
-# ── Make the workspace root importable when run directly ────────────────────
+#  Make the workspace root importable when run directly 
 _ROOT = Path(__file__).resolve().parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
@@ -49,12 +49,12 @@ from moderation.moderator import (
     RuleBasedModerator,
     HuggingFaceModerator,
     # OmniModerator,      # uncomment when OPENAI_API_KEY is set
-    # OpenAIModerator,    # requires OPENAI_API_KEY + credits
+    # OpenAIModerator,    # requires OPENAI_API_KEY + credits and you can set it up .env
     # GeminiModerator,    # requires GEMINI_API_KEY
 )
 from evaluation.metrics import evaluate_run, threshold_sweep
 
-# ── Logging ──────────────────────────────────────────────────────────────────
+#  Logging 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s  %(levelname)-8s  %(name)s — %(message)s",
@@ -62,17 +62,16 @@ logging.basicConfig(
 )
 logger = logging.getLogger("pipeline")
 
-# ── Constants ─────────────────────────────────────────────────────────────────
+#  Constants 
 
 # HuggingFace classifiers don't use prompts — they run once with "default".
-# Prompt A/B testing only applies to LLM-based moderators (GPT, Gemini).
 PROMPT_VERSIONS = ["default"]
 
 # All Jigsaw label categories + overall + Davidson's binary toxic
 CATEGORIES = ["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]
 
 
-# ── DB helpers ────────────────────────────────────────────────────────────────
+#  DB helpers 
 
 def _write_predictions(predictions_df: pd.DataFrame, engine: Any) -> None:
     """Append a batch of predictions to the predictions table."""
@@ -163,7 +162,7 @@ def _write_error_analysis(ground_truth_df: pd.DataFrame,
         logger.info("Wrote %d error_analysis rows (prompt=%s)", len(error_rows), prompt_version)
 
 
-# ── Summary printer ───────────────────────────────────────────────────────────
+#  Summary printer 
 
 def _print_summary(summary_rows: list[dict]) -> None:
     """Print a formatted results table to stdout."""
@@ -187,12 +186,12 @@ def _print_summary(summary_rows: list[dict]) -> None:
     print(f"\n  {len(summary_rows)} result row(s).\n")
 
 
-# ── Adversarial robustness evaluation ────────────────────────────────────────
+#  Adversarial robustness evaluation 
 
 # Techniques to test — covers the main real-world evasion patterns
 ADVERSARIAL_TECHNIQUES = [
     "original",             # clean baseline
-    "spacing",              # f u c k
+    "spacing",              # H A T E
     "symbol_substitution",  # h@te, k1ll
     "homoglyph",            # Cyrillic/Greek lookalikes
     "zero_width",           # invisible chars inside words
@@ -334,8 +333,6 @@ def _moderate_single(
     Handles both per-item and batch moderators gracefully.
     """
     try:
-        # HuggingFace and Omni override moderate() for batching.
-        # For single items we build a one-row DataFrame.
         single_df = pd.DataFrame([{"item_id": item_id, "text": text}])
         result_df = moderator.moderate(single_df, "default")
         if result_df.empty:
@@ -347,12 +344,12 @@ def _moderate_single(
         return None, None
 
 
-# ── Main pipeline ─────────────────────────────────────────────────────────────
+#  Main pipeline 
 
 def run_pipeline() -> None:
     """Execute the full pipeline end-to-end."""
 
-    # ── 1. Config + DB connection ────────────────────────────────────────────
+    #Config + DB connection 
     try:
         from dotenv import load_dotenv
         load_dotenv()
@@ -370,7 +367,7 @@ def run_pipeline() -> None:
         logger.error("Make sure PostgreSQL is running and DATABASE_URL is correct.")
         sys.exit(1)
 
-    # ── 2. Apply schema (idempotent) ─────────────────────────────────────────
+    #  Apply schema (idempotent) 
     schema_path = _ROOT / "db" / "schema.sql"
     if schema_path.exists():
         logger.info("Applying schema from %s", schema_path)
@@ -386,7 +383,7 @@ def run_pipeline() -> None:
                         # OR REPLACE VIEW may fail on first run — safe to ignore
                         logger.debug("Schema stmt skipped: %s", e)
 
-    # ── 3. Ingest ────────────────────────────────────────────────────────────
+    #  Ingest 
     if cfg.skip_ingest:
         logger.info("SKIP_INGEST=true — loading existing ground_truth from DB")
         with engine.connect() as conn:
@@ -404,19 +401,17 @@ def run_pipeline() -> None:
 
     logger.info("Ground truth: %d items", len(ground_truth_df))
 
-    # ── 4. Build moderator instances ─────────────────────────────────────────
+    # Build moderator instances 
     moderators = [
         RuleBasedModerator(cfg, engine),
         HuggingFaceModerator(cfg, engine, hf_model_name="s-nlp/roberta_toxicity_classifier"),
         HuggingFaceModerator(cfg, engine, hf_model_name="Arsive/roberta-toxicity-classifier"),
         HuggingFaceModerator(cfg, engine, hf_model_name="textdetox/xlmr-large-toxicity-classifier-v2"),
     ]
-    # Note: OpenAIModerator and GeminiModerator are available in moderator.py
-    # but not run by default — add them back when API credits are available.
-
+    #OpenAIModerator and GeminiModerator are available in moderator.py but I am not using it, Gemini gives free credits, feel free to use it
     summary_rows: list[dict] = []
 
-    # ── 5. Moderate + evaluate per model × prompt_version ───────────────────
+    # Moderate + evaluate per model × prompt_version
     for moderator in moderators:
         model_name = moderator.model_name
         logger.info("── Model: %s ──────────────────────────────", model_name)
@@ -424,14 +419,14 @@ def run_pipeline() -> None:
         for prompt_version in PROMPT_VERSIONS:
             logger.info("  Prompt version: %s", prompt_version)
 
-            # ── 5a. Run moderation ────────────────────────────────────────
+            #  Run moderation 
             predictions_df = moderator.moderate(ground_truth_df, prompt_version)
             _write_predictions(predictions_df, engine)
 
             metrics_rows: list[dict] = []
             threshold_rows: list[dict] = []
 
-            # ── 5b. Evaluate per category ─────────────────────────────────
+            #  Evaluate per category 
             for category in CATEGORIES:
                 # Skip categories that don't exist in this dataset
                 if category not in ground_truth_df.columns:
@@ -464,7 +459,7 @@ def run_pipeline() -> None:
                     "fnr":            f"{result['fnr']:.3f}",
                 })
 
-            # ── 5c. Overall (across all categories combined) ──────────────
+            #  Overall (across all categories combined) 
             # Use "toxic" as the headline overall metric
             if "toxic" in ground_truth_df.columns:
                 overall = evaluate_run(
@@ -474,21 +469,21 @@ def run_pipeline() -> None:
                 overall["category"] = "overall"
                 metrics_rows.append(overall)
 
-            # ── 5d. Write metrics + threshold sweep ───────────────────────
+            # Write metrics + threshold sweep 
             _write_metrics(metrics_rows, cfg.run_id, prompt_version, engine, model_name)
             _write_threshold_metrics(threshold_rows, cfg.run_id, engine)
 
-            # ── 5e. Write error analysis (FP + FN) ───────────────────────
+            #  5e. Write error analysis (FP + FN) 
             _write_error_analysis(
                 ground_truth_df, predictions_df,
                 cfg.run_id, prompt_version, engine
             )
 
-    # ── 6. Adversarial robustness evaluation ─────────────────────────────────
+    # Adversarial robustness evaluation 
     logger.info("── Adversarial robustness evaluation ──────────────────────")
     _run_adversarial_evaluation(ground_truth_df, moderators, cfg.run_id, engine)
 
-    # ── 7. Print summary ─────────────────────────────────────────────────────
+    # Print summary 
     _print_summary(summary_rows)
     logger.info("Pipeline complete. Run ID: %s", cfg.run_id)
 
