@@ -19,7 +19,6 @@ python -m analysis.queries --all
 
 ## Available queries
 
-`best_prompt_by_metric` — which model/prompt hits best F1 per category  
 `worst_categories` — which harm types are hardest to detect  
 `model_comparison` — side-by-side precision/recall/F1 for all models  
 `false_positive_samples` — highest-confidence wrong flags  
