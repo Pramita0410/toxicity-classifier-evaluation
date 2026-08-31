@@ -41,7 +41,8 @@ visualize.py         generates PNG charts from the database
 <img width="1900" height="945" alt="image" src="https://github.com/user-attachments/assets/8ae67431-b360-4289-9454-a0e07f2485b1" />
 
 
-<img width="1899" height="873" alt="image" src="https://github.com/user-attachments/assets/309b4883-256f-4377-b12c-9452bb496605" />
+<img width="1911" height="844" alt="image" src="https://github.com/user-attachments/assets/bbf78461-1843-4155-a218-a9f31ec6887f" />
+
 
 
 <img width="1890" height="832" alt="image" src="https://github.com/user-attachments/assets/26b2b6eb-09b3-4700-ae95-41a1d94e238c" />
