@@ -65,6 +65,8 @@ Every model makes mistakes — the question is which kind. roberta-multilabel mi
 
 This is the most policy-relevant chart. The orange bar (clean content) should be near zero for any deployable model. roberta-multilabel flags 82.5% of clean tweets — the blue and orange bars are nearly the same height, meaning it treats hate speech and clean content almost identically. roberta_toxicity_classifier drops to 7.2% on clean content while maintaining 82.5% on hate speech — that gap between blue and orange is what a working moderation system looks like. XLM-R sits at 22% on clean content, acceptable but improvable. This chart was only possible because we preserved Davidson's original 3-class label instead of collapsing everything to binary
 
+**Sample Table Chart of the Comments**
+
 <img width="1897" height="787" alt="image" src="https://github.com/user-attachments/assets/f0aa3666-0cfd-4c69-8271-75721ed2dc18" />
 
 
