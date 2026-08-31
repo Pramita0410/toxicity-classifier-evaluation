@@ -36,6 +36,19 @@ visualize.py         generates PNG charts from the database
 
 ---
 
+## Dashboard and Charts
+
+<img width="1900" height="945" alt="image" src="https://github.com/user-attachments/assets/8ae67431-b360-4289-9454-a0e07f2485b1" />
+
+
+<img width="1899" height="873" alt="image" src="https://github.com/user-attachments/assets/309b4883-256f-4377-b12c-9452bb496605" />
+
+
+<img width="1890" height="832" alt="image" src="https://github.com/user-attachments/assets/26b2b6eb-09b3-4700-ae95-41a1d94e238c" />
+
+<img width="1891" height="858" alt="image" src="https://github.com/user-attachments/assets/7ffc36e8-ed59-4be7-afaf-35ed97c3f22b" />
+
+
 ## Key findings
 
 **Aggregate metrics are misleading.** roberta-multilabel's F1 looked competitive until we checked its flag rate on clean content by Davidson class. It would remove 4 in 5 legitimate tweets.
