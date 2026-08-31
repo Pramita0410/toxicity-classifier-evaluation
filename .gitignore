@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ── Real dataset files — NEVER commit these ───────────────────────────────────
 data/raw/
 data/processed/
@@ -51,9 +52,50 @@ coverage.xml
 .DS_Store
 Thumbs.db
 
-# ── Generated outputs ─────────────────────────────────────────────────────────
+# ── Internal IDE files ────────────────────────────────────────────────────────
+.kiro/
+
+# ── Redundant test runners ────────────────────────────────────────────────────
+run_tests.ps1
+run_tests.py
+
+# ── One-off utility scripts ───────────────────────────────────────────────────
+visualize.py
+run_ingest_only.py
+fix_davidson_class.py
+
+# ── Detailed test files (keep only test_metrics.py) ──────────────────────────
+tests/test_ingestion.py
+tests/test_moderation.py
+tests/test_adversarial.py
+tests/conftest.py
 dashboards/*.png
 test_results.txt
 *.ipynb
 .ipynb_checkpoints/
 superset/
+=======
+### AL ###
+#Template for AL projects for Dynamics 365 Business Central
+#launch.json folder
+.vscode/
+#Cache folder
+.alcache/
+#Symbols folder
+.alpackages/
+#Snapshots folder
+.snapshots/
+#Testing Output folder
+.output/
+#Extension App-file
+*.app
+#Rapid Application Development File
+rad.json
+#Translation Base-file
+*.g.xlf
+#License-files
+*.bclicense
+*.flf
+#Test results file
+TestResults.xml
+>>>>>>> ea4d1e07cf751a7c670d98ede6cfd6fb421036e4
