@@ -1,12 +1,21 @@
 # Trust & Safety Evaluation Platform
 
-Most toxicity classifiers get benchmarked on the same data they trained on and called production-ready. This project questions that.
+This project evaluates four content moderation models against two real labeled datasets — Jigsaw (Wikipedia comments) and Davidson (tweets), across standard metrics, domain shift, and adversarial robustness.
 
-It runs four content moderation models against two labeled datasets, tests robustness under ten real evasion techniques, and surfaces where models fail — not just where they succeed.
+To go beyond clean-text evaluation, I built an adversarial generator that synthetically produces obfuscated variants of toxic comments using ten real evasion techniques: zero-width characters, homoglyphs, leetspeak, spacing, and more. Each variant was fed into the models both raw and after normalization, measuring whether preprocessing actually helps and for which models it matters (check the heatmap to see the results).
 
-The finding that mattered: a model with F1=0.79 was completely undeployable because it flagged 82% of clean tweets as toxic. Aggregate metrics hid this until we broke down performance by Davidson's original 3-class content label.
+One finding stood out: a model with F1=0.79 flagged 82% of clean tweets as toxic. That only became visible when we preserved Davidson's original 3-class label instead of collapsing everything to binary. Aggregate metrics alone would have missed it.
 
 ---
+
+## Technologies Used
+
+- **Python** — ingestion, moderation, evaluation, adversarial testing
+- **Hugging Face / PyTorch** — pretrained toxicity classifiers
+- **PostgreSQL** — ground truth, predictions, metrics, and analysis tables
+- **Apache Superset** — interactive model-evaluation dashboards
+- **Docker** — local PostgreSQL and Superset environments
+- **SQL** — model comparison, error analysis, policy analysis, and dashboard datasets
 
 ## Project structure
 
@@ -49,7 +58,7 @@ roberta_toxicity_classifier wins on precision but XLM-R is more consistent acros
 
 <img width="1911" height="844" alt="image" src="https://github.com/user-attachments/assets/bbf78461-1843-4155-a218-a9f31ec6887f" />
 
-roberta-multilabel scores near 100% on almost every attack without normalization — but as the policy dashboard shows, it does this by flagging everything including clean content. It's aggressive by design, not robust by intelligence. The models that actually need normalization (roberta_toxicity_classifier, xlmr) drop to 0% on zero-width and homoglyph attacks raw, then recover after preprocessing. Normalization matters for the right models.
+roberta-multilabel scores near 100% on almost every attack without normalization — but as the policy dashboard shows, it does this by flagging everything including clean content. Its apparent robustness is partly explained by its extremely aggressive flagging behavior rather than strong class separation. The models that actually need normalization (roberta_toxicity_classifier, xlmr) drop to 0% on zero-width and homoglyph attacks raw, then recover after preprocessing. Normalization matters for the right models.
 
 **Model Error Tradeoff: Wrong Flags vs Missed Harm**
 
@@ -63,7 +72,7 @@ Every model makes mistakes — the question is which kind. roberta-multilabel mi
 
 <img width="1912" height="859" alt="image" src="https://github.com/user-attachments/assets/3434a085-8f2f-4de9-b3ae-16461c724449" />
 
-This is the most policy-relevant chart. The orange bar (clean content) should be near zero for any deployable model. roberta-multilabel flags 82.5% of clean tweets — the blue and orange bars are nearly the same height, meaning it treats hate speech and clean content almost identically. roberta_toxicity_classifier drops to 7.2% on clean content while maintaining 82.5% on hate speech — that gap between blue and orange is what a working moderation system looks like. XLM-R sits at 22% on clean content, acceptable but improvable. This chart was only possible because we preserved Davidson's original 3-class label instead of collapsing everything to binary
+This is the most policy-relevant chart. The orange bar (clean content) should be near zero for any deployable model. roberta-multilabel flags 82.5% of clean tweets, the blue and orange bars are nearly the same height, meaning it treats hate speech and clean content almost identically. roberta_toxicity_classifier flags 82.5% of hate-speech examples while flagging 16.4% of clean tweets. XLM-R flags 88.4% of hate-speech examples and 22.1% of clean tweets.. XLM-R sits at 22% on clean content, acceptable but improvable. This chart was only possible because we preserved Davidson's original 3-class label instead of collapsing everything to binary
 
 **Sample Table Chart of the Comments**
 
@@ -141,10 +150,24 @@ python -m pytest tests/ -v
 No database or API credentials needed. All tests use fixtures or pure Python.
 
 ---
+---
+
+## Known limitations and bias
+
+**Training data bias** — roberta_toxicity_classifier and roberta-toxicity-classifier were fine-tuned on Jigsaw. Their high Jigsaw scores are partly inflated by this. Davidson results are the more honest measure of generalization. We included these models intentionally to compare in-distribution vs out-of-distribution performance.
+
+**Davidson label noise** — Davidson class 1 (offensive language) contains noisy crowdworker labels. Some flagged comments are clearly benign. Several false negatives in the error analysis were correct model predictions on questionable labels. Class 0 (hate speech) recall is the more reliable metric.
+
+**Normalization edge cases** — the normalizer assumes symbols are adversarial. `C++`, `@username`, `$100` contain symbols that could be misinterpreted without boundary-aware matching. We handle this with whole-word regex but edge cases exist. Normalization should be applied selectively.
+
+**Sample size** — results use 5,000 rows per dataset. Rare categories like `threat` and `identity_hate` have fewer positive examples at this scale. Numbers may shift at full dataset size.
+
+---
+
 
 ## Datasets
 
 Jigsaw Toxic Comment Classification — Kaggle / CC BY 4.0
 Davidson Hate Speech and Offensive Language — GitHub / MIT
 
-Neither dataset is committed to this repo. Download them separately.
+Neither dataset is committed to this repository. Download the source datasets separately and configure their paths in `.env`.
