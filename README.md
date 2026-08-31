@@ -38,17 +38,31 @@ visualize.py         generates PNG charts from the database
 
 ## Dashboard and Charts
 
+**Model Evaluation Dashboard**
+
 <img width="1900" height="945" alt="image" src="https://github.com/user-attachments/assets/8ae67431-b360-4289-9454-a0e07f2485b1" />
+
+
 roberta_toxicity_classifier wins on precision but XLM-R is more consistent across datasets. The threshold curve shows roberta-multilabel needs a low cutoff to stay useful, operationally that means more false flags.
+
+**Normalization Impact Heatmap**
 
 <img width="1911" height="844" alt="image" src="https://github.com/user-attachments/assets/bbf78461-1843-4155-a218-a9f31ec6887f" />
 
 roberta-multilabel scores near 100% on almost every attack without normalization — but as the policy dashboard shows, it does this by flagging everything including clean content. It's aggressive by design, not robust by intelligence. The models that actually need normalization (roberta_toxicity_classifier, xlmr) drop to 0% on zero-width and homoglyph attacks raw, then recover after preprocessing. Normalization matters for the right models.
 
+**Model Error Tradeoff: Wrong Flags vs Missed Harm**
+
 <img width="1911" height="856" alt="image" src="https://github.com/user-attachments/assets/75bc2322-1408-4685-9862-e8344a9ddc50" />
+
+
 Every model makes mistakes — the question is which kind. roberta-multilabel misses almost nothing (32 FN) but over-flags 2,790 clean posts. roberta_toxicity_classifier is more surgical: 472 false flags, 881 missed harm. XLM-R sits closest to balanced. rule_based misses 4,580 — proving that a list of 21 keywords is not a moderation strategy.
 
+
+**Flag Rate by Content Severity — Davidson Dataset**
+
 <img width="1912" height="859" alt="image" src="https://github.com/user-attachments/assets/3434a085-8f2f-4de9-b3ae-16461c724449" />
+
 This is the most policy-relevant chart. The orange bar (clean content) should be near zero for any deployable model. roberta-multilabel flags 82.5% of clean tweets — the blue and orange bars are nearly the same height, meaning it treats hate speech and clean content almost identically. roberta_toxicity_classifier drops to 7.2% on clean content while maintaining 82.5% on hate speech — that gap between blue and orange is what a working moderation system looks like. XLM-R sits at 22% on clean content, acceptable but improvable. This chart was only possible because we preserved Davidson's original 3-class label instead of collapsing everything to binary
 
 <img width="1897" height="787" alt="image" src="https://github.com/user-attachments/assets/f0aa3666-0cfd-4c69-8271-75721ed2dc18" />
